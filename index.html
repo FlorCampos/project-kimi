@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project K.I.M.I.</title>
+  <style>
+    body {
+      background-color: black;
+      color: #00ff00;
+      font-family: monospace;
+      padding: 2em;
+      overflow: hidden;
+    }
+    #console {
+      max-width: 800px;
+      white-space: pre-wrap;
+      line-height: 1.5em;
+    }
+    input {
+      background: black;
+      color: #00ff00;
+      border: none;
+      font-family: monospace;
+      font-size: 1em;
+      width: 100%;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="console"></div>
+  <input type="text" id="input" autofocus />
+
+  <audio id="keystroke-sound" src="https://www.soundjay.com/mechanical/sounds/mechanical-keyboard-1.mp3" preload="auto"></audio>
+
+  <script>
+    const consoleEl = document.getElementById('console');
+    const input = document.getElementById('input');
+    const keystroke = document.getElementById('keystroke-sound');
+
+    const responses = {
+      'help': `Available commands:
+  - start
+  - love.log
+  - mission.k
+  - jokes.k
+  - secret.kiss
+  - gift.unlock
+  - exit`,
+
+      'start': `Authenticating...
+Welcome to Project K.I.M.I. (Kernel of Infinite Mutual Intensity)
+A system built exclusively for: Kimi 💚
+Type 'help' to see available commands.`,
+
+      'love.log': `Accessing emotional logs...
+[LOG 01] Your smile is the cutest bug I never want to fix.
+[LOG 02] High priority task: Kiss you every chance I get.
+[LOG 03] My source code: 100% Kimi-dependent.`,
+
+      'mission.k': `Loading mission...
+Objective: Spoil Kimi endlessly.
+Protocol: Infinite hugs, auto-kisses, and unlimited sweetness.
+Status: In progress since the day we met.`,
+
+      'jokes.k': `Executing romantic-funny mode...
+Do you know what kind of exception you are? An ExceptionInMyHeart ♥️
+And what kind of variable? A constant in my life.`,
+
+      'secret.kiss': `Processing...
+*** SECRET ACCESS GRANTED ***
+Initiating virtual kiss simulation...
+(*muah*) (*muah*) (*muah*)
+Warning! Cuteness level exceeding safe limits.`,
+
+      'gift.unlock': `Unlocking virtual gift...
+Surprise! The real gift is YOU, but just in case...
+Check under your pillow tonight 😉`,
+
+      'exit': `Disconnecting...
+Thanks for accessing Project K.I.M.I. 💚
+Remember: the system never powers down its love for you.`
+    };
+
+    let commandHistory = [];
+    let historyIndex = -1;
+
+    function printOutput(output) {
+      consoleEl.textContent += `\n${output}\n> `;
+      consoleEl.scrollTop = consoleEl.scrollHeight;
+    }
+
+    input.addEventListener('keydown', (e) => {
+      // Clone sound to avoid cutting previous sound
+      if (e.key.length === 1 || e.key === 'Backspace') {
+        const soundClone = keystroke.cloneNode();
+        soundClone.volume = 0.2;
+        soundClone.play().catch(() => {});
+      }
+
+      if (e.key === 'Enter') {
+        const command = input.value.trim();
+        commandHistory.push(command);
+        historyIndex = commandHistory.length;
+        consoleEl.textContent += `\n> ${command}`;
+        input.value = '';
+
+        if (responses[command]) {
+          setTimeout(() => printOutput(responses[command]), 300);
+        } else {
+          setTimeout(() => printOutput(`Unrecognized command. Type 'help' for assistance.`), 300);
+        }
+      } else if (e.key === 'ArrowUp') {
+        if (historyIndex > 0) {
+          historyIndex--;
+          input.value = commandHistory[historyIndex];
+        }
+      } else if (e.key === 'ArrowDown') {
+        if (historyIndex < commandHistory.length - 1) {
+          historyIndex++;
+          input.value = commandHistory[historyIndex];
+        } else {
+          input.value = '';
+        }
+      }
+    });
+
+    // Auto start message
+    printOutput("Type 'start' to launch Project K.I.M.I.");
+    input.focus();
+  </script>
+</body>
+</html>
